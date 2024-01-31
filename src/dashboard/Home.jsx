@@ -12,7 +12,9 @@ import TodoObj from "../store/index";
 const { Content } = Layout;
 
 const Home = () => {
-  var editData;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editData, setEditData] = useState({});
 
   const handleClick = (formValue) => {
     TodoObj.createTodo(formValue);
@@ -23,17 +25,10 @@ const Home = () => {
   };
 
   const handleEdit = (data) => {
-    console.log("user id :- ", { ...data });
-    editData = { ...data };
+    setEditData({ ...data });
     setIsEditModalOpen(true);
-
-    console.log("This is target value :- ", editData);
-
-    console.log("inside age :- ", data.age);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -45,8 +40,10 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
-  const EdithandleOk = () => {
+  const EdithandleOk = (data) => {
     setIsEditModalOpen(false);
+    console.log(data);
+    TodoObj.updateTodo(data);
   };
 
   const EdithandleCancel = () => {
@@ -91,65 +88,72 @@ const Home = () => {
   ];
 
   return (
-    <Layout className="site-layout">
-      <Content
-        className="site-layout-background"
-        style={{
-          margin: "24px 16px",
-          padding: 24,
-          minHeight: 280,
-        }}
-      >
-        <Row className="gap-3">
-          <Row className="flex justify-between w-full gap-4">
-            <Col>
-              <Row className="flex gap-4">
-                <Col>
-                  <Form.Item label="Search Item" name="searchItem">
-                    <Input placeholder="Search Item" />
-                  </Form.Item>
-                </Col>
-                <Col>
-                  <Form.Item>
-                    <Button className="bg-[#4096ff]" type="primary">
-                      Search
-                    </Button>
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Col>
-            <Col>
-              <FormItem>
-                <Button
-                  type="primary"
-                  className="bg-[#4096ff] flex justify-center items-center"
-                  onClick={showModal}
-                >
-                  Add Item <PlusOutlined />
-                </Button>
-              </FormItem>
-            </Col>
+    <>
+      {" "}
+      <Layout className="site-layout">
+        <Content
+          className="site-layout-background"
+          style={{
+            margin: "24px 16px",
+            padding: 24,
+            minHeight: 280,
+          }}
+        >
+          <Row className="gap-3">
+            <Row className="flex justify-between w-full gap-4">
+              <Col>
+                <Row className="flex gap-4">
+                  <Col>
+                    <Form.Item label="Search Item" name="searchItem">
+                      <Input placeholder="Search Item" />
+                    </Form.Item>
+                  </Col>
+                  <Col>
+                    <Form.Item>
+                      <Button className="bg-[#4096ff]" type="primary">
+                        Search
+                      </Button>
+                    </Form.Item>
+                  </Col>
+                </Row>
+              </Col>
+              <Col>
+                <FormItem>
+                  <Button
+                    type="primary"
+                    className="bg-[#4096ff] flex justify-center items-center"
+                    onClick={showModal}
+                  >
+                    Add Item <PlusOutlined />
+                  </Button>
+                </FormItem>
+              </Col>
+            </Row>
+            <Table
+              columns={columns}
+              className="w-full"
+              dataSource={[...TodoObj.todos]}
+            />
           </Row>
-          <Table
-            columns={columns}
-            className="w-full"
-            dataSource={[...TodoObj.todos]}
-          />
-        </Row>
+        </Content>
+        {console.log("inside html ", editData)}
+      </Layout>
+      {isModalOpen && (
         <AddItem
           isModalOpen={isModalOpen}
           handleOk={handleOk}
           handleCancel={handleCancel}
         />
-      </Content>
-      {console.log("inside html ", editData)}
-      <EditItemModal
-        isModalOpen={isEditModalOpen}
-        handleOk={EdithandleOk}
-        handleCancel={EdithandleCancel}
-        editData={editData}
-      />
-    </Layout>
+      )}
+      {isEditModalOpen && (
+        <EditItemModal
+          isModalOpen={isEditModalOpen}
+          handleOk={EdithandleOk}
+          handleCancel={EdithandleCancel}
+          editData={editData}
+        />
+      )}
+    </>
   );
 };
 

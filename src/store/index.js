@@ -13,6 +13,7 @@ class TodoStore {
       Todo: computed,
       increment: action,
       storeDetails: computed,
+      updateTodo: action,
     });
   }
 
@@ -22,6 +23,10 @@ class TodoStore {
 
   deleteTodo(id) {
     this.todos = this.todos.filter((todo) => todo.id !== id);
+  }
+
+  updateTodo(data) {
+    this.todos = this.todos.map((todo) => (todo.id === data.id ? data : todo));
   }
 
   increment() {

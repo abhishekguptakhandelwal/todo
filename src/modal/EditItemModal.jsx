@@ -2,13 +2,13 @@ import React from "react";
 import { InputNumber, Modal, Form, Input, Button } from "antd";
 import { useForm } from "antd/es/form/Form";
 
-const EditItemModal = ({ isModalOpen, handleCancel, editData }) => {
+const EditItemModal = ({ isModalOpen, handleOk, handleCancel, editData }) => {
   const [form] = useForm();
-
-  console.log(editData);
 
   const onFinish = (values) => {
     console.log("value :- ", values);
+    console.log({ id: editData.id, ...values });
+    handleOk({ id: editData.id, ...values });
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -36,7 +36,9 @@ const EditItemModal = ({ isModalOpen, handleCancel, editData }) => {
             maxWidth: 600,
           }}
           initialValues={{
-            remember: true,
+            ["firstName"]: editData.firstName,
+            ["lastName"]: editData.lastName,
+            ["age"]: editData.age,
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
