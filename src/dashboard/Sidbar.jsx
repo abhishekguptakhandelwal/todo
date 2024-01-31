@@ -1,8 +1,8 @@
 import React from "react";
 import {
   HomeOutlined,
-  UnorderedListOutlined,
-  FolderAddOutlined,
+  // UnorderedListOutlined,
+  // FolderAddOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu } from "antd";

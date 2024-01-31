@@ -1,29 +1,41 @@
-import { makeObservable, observable, action, computed, autorun } from "mobx";
+import { makeObservable, observable, action, computed } from "mobx";
 
-export default class TodoStore {
+class TodoStore {
+  counter = 0;
   todos = [];
 
   constructor() {
     makeObservable(this, {
       todos: observable,
+      counter: observable,
       createTodo: action,
       deleteTodo: action,
+      Todo: computed,
+      increment: action,
+      storeDetails: computed,
     });
   }
 
-  createTodo(todo = { id: Math.random, firstName: "", lastName: "", age: "" }) {
+  createTodo(todo) {
     this.todos.push(todo);
   }
 
-  deleteTodo(todoId) {
-    this.todos.filter(this.todos.id !== todoId);
+  deleteTodo(id) {
+    this.todos = this.todos.filter((todo) => todo.id !== id);
+  }
+
+  increment() {
+    this.counter++;
   }
 
   get storeDetails() {
-    return `firstName : ${this.todos.firstName}  and lastName : ${this.todos.lastName} total owners, so far!!!`;
+    return `firstName : ${this.todos}  `;
   }
 
-  getTodo() {
+  get Todo() {
     return this.todos;
   }
 }
+
+const TodoObj = new TodoStore();
+export default TodoObj;

@@ -1,14 +1,14 @@
 import React from "react";
 import { InputNumber, Modal, Form, Input, Button } from "antd";
-import { observer } from "mobx-react";
+import { useForm } from "antd/es/form/Form";
 
-const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
-  const [form] = Form.useForm();
+const EditItemModal = ({ isModalOpen, handleCancel, editData }) => {
+  const [form] = useForm();
 
-  console.log("Hello");
+  console.log(editData);
+
   const onFinish = (values) => {
-    handleOk({ ...values, id: Math.random() * 100 });
-    form.resetFields();
+    console.log("value :- ", values);
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -25,7 +25,7 @@ const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
         <Form
           name="basic"
           form={form}
-          id="myForm"
+          id="editForm"
           labelCol={{
             span: 8,
           }}
@@ -86,4 +86,4 @@ const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
   );
 };
 
-export default observer(Additem);
+export default EditItemModal;
