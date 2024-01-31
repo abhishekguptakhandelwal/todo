@@ -1,13 +1,11 @@
 import React from "react";
 import { InputNumber, Modal, Form, Input, Button } from "antd";
 import { useForm } from "antd/es/form/Form";
-
+import RegValidation from "../regx/regxIndex";
 const EditItemModal = ({ isModalOpen, handleOk, handleCancel, editData }) => {
   const [form] = useForm();
 
   const onFinish = (values) => {
-    console.log("value :- ", values);
-    console.log({ id: editData.id, ...values });
     handleOk({ id: editData.id, ...values });
   };
   const onFinishFailed = (errorInfo) => {
@@ -39,6 +37,7 @@ const EditItemModal = ({ isModalOpen, handleOk, handleCancel, editData }) => {
             ["firstName"]: editData.firstName,
             ["lastName"]: editData.lastName,
             ["age"]: editData.age,
+            ["email"]: editData.email,
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -69,6 +68,32 @@ const EditItemModal = ({ isModalOpen, handleOk, handleCancel, editData }) => {
           >
             <Input />
           </Form.Item>
+          <Form.Item
+            label="email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please Enter Email!",
+                type: "email",
+              },
+              {
+                required: true,
+                type: "regexp",
+                validator: (_, value) => {
+                  if (RegValidation.emailRegex.test(value)) {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject("Please Enter valid email ");
+                  }
+                },
+
+                message: "Please Enter valid email ",
+              },
+            ]}
+          >
+            <Input placeholder="Enter Email" />
+          </Form.Item>
 
           <Form.Item
             label="Age"
@@ -77,6 +102,19 @@ const EditItemModal = ({ isModalOpen, handleOk, handleCancel, editData }) => {
               {
                 required: true,
                 message: "Please Enter Age!",
+              },
+              {
+                required: true,
+                type: "regexp",
+                validator: (_, value) => {
+                  if (RegValidation.numberRegex.test(value)) {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject("Only Numbers are allows");
+                  }
+                },
+
+                message: "Only Numbers are allows",
               },
             ]}
           >

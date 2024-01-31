@@ -1,11 +1,11 @@
 import React from "react";
 import { InputNumber, Modal, Form, Input, Button } from "antd";
 import { observer } from "mobx-react";
+import RegValidation from "../regx/regxIndex";
 
-const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
+const Additem = ({ isModalOpen, handleOk, handleCancel, setDataSource }) => {
   const [form] = Form.useForm();
 
-  console.log("Hello");
   const onFinish = (values) => {
     handleOk({ ...values, id: Math.random() * 100 });
     form.resetFields();
@@ -52,7 +52,7 @@ const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Enter First Name" />
           </Form.Item>
 
           <Form.Item
@@ -65,7 +65,33 @@ const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Enter last Name" />
+          </Form.Item>
+          <Form.Item
+            label="email"
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Please Enter Email!",
+                type: "email",
+              },
+              {
+                required: true,
+                type: "regexp",
+                validator: (_, value) => {
+                  if (RegValidation.emailRegex.test(value)) {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject("Please Enter valid email ");
+                  }
+                },
+
+                message: "Please Enter valid email ",
+              },
+            ]}
+          >
+            <Input placeholder="Enter Email" />
           </Form.Item>
 
           <Form.Item
@@ -76,9 +102,22 @@ const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
                 required: true,
                 message: "Please Enter Age!",
               },
+              {
+                required: true,
+                type: "regexp",
+                validator: (_, value) => {
+                  if (RegValidation.numberRegex.test(value)) {
+                    return Promise.resolve();
+                  } else {
+                    return Promise.reject("Only Numbers are allows");
+                  }
+                },
+
+                message: "Only Numbers are allows",
+              },
             ]}
           >
-            <InputNumber />
+            <Input placeholder="Enter age" />
           </Form.Item>
         </Form>
       </Modal>

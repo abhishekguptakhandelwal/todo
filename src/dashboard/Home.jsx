@@ -2,19 +2,29 @@ import React, { useEffect, useState } from "react";
 
 import { observer } from "mobx-react";
 
-import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  ArrowDownOutlined,
+} from "@ant-design/icons";
 import { Button, Col, Form, Input, Layout, Row, Table } from "antd";
-import FormItem from "antd/es/form/FormItem";
 import AddItem from "../modal/addItem";
 import EditItemModal from "../modal/EditItemModal";
 import TodoObj from "../store/index";
+import { exportCSV } from "../operation/ExportCsv";
+import useDebounce from "../customHook/UseDebounce";
 
 const { Content } = Layout;
-
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editData, setEditData] = useState({});
+  const header = ["First Name", "Last Name", "Email", "Age"];
+  let data = [...TodoObj.todos];
+
+  const [dataSource, setDataSource] = useState(data);
+  const [search, setSearch] = useState("");
 
   const handleClick = (formValue) => {
     TodoObj.createTodo(formValue);
@@ -22,6 +32,7 @@ const Home = () => {
 
   const handleDelete = (id) => {
     TodoObj.deleteTodo(id);
+    setDataSource([...TodoObj.todos]);
   };
 
   const handleEdit = (data) => {
@@ -34,6 +45,7 @@ const Home = () => {
   };
   const handleOk = (formValue) => {
     handleClick(formValue);
+    setDataSource([...TodoObj.todos]);
     setIsModalOpen(false);
   };
   const handleCancel = () => {
@@ -44,10 +56,45 @@ const Home = () => {
     setIsEditModalOpen(false);
     console.log(data);
     TodoObj.updateTodo(data);
+    setDataSource([...TodoObj.todos]);
   };
 
   const EdithandleCancel = () => {
     setIsEditModalOpen(false);
+  };
+
+  const exportData = () => {
+    const userData = [...TodoObj.todos];
+    exportCSV(userData, header);
+  };
+  useDebounce(
+    () => {
+      setDataSource(
+        data.filter((todo) =>
+          todo.firstName.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    },
+    [search.length > 2],
+    500
+  );
+
+  const handleSearch = () => {
+    if (search.length === 0) {
+      setDataSource([...TodoObj.todos]);
+    }
+    const filterBySearch = data.filter((todo) =>
+      todo.firstName.toLowerCase().includes(search.toLowerCase())
+    );
+    setDataSource(filterBySearch);
+  };
+  let onChange = (e) => {
+    setSearch(e.target.value);
+
+    if (e.target.value.length === 0) {
+      setSearch("");
+      setDataSource([...TodoObj.todos]);
+    }
   };
 
   const columns = [
@@ -65,6 +112,12 @@ const Home = () => {
     },
     {
       key: 3,
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      key: 4,
       title: "age",
       dataIndex: "age",
       key: "age",
@@ -105,12 +158,16 @@ const Home = () => {
                 <Row className="flex gap-4">
                   <Col>
                     <Form.Item label="Search Item" name="searchItem">
-                      <Input placeholder="Search Item" />
+                      <Input placeholder="Search Item" onChange={onChange} />
                     </Form.Item>
                   </Col>
                   <Col>
                     <Form.Item>
-                      <Button className="bg-[#4096ff]" type="primary">
+                      <Button
+                        className="bg-[#4096ff]"
+                        type="primary"
+                        onClick={handleSearch}
+                      >
                         Search
                       </Button>
                     </Form.Item>
@@ -118,31 +175,42 @@ const Home = () => {
                 </Row>
               </Col>
               <Col>
-                <FormItem>
-                  <Button
-                    type="primary"
-                    className="bg-[#4096ff] flex justify-center items-center"
-                    onClick={showModal}
-                  >
-                    Add Item <PlusOutlined />
-                  </Button>
-                </FormItem>
+                <Row className="flex gap-4">
+                  <Col>
+                    <Button
+                      type="primary"
+                      className="bg-[#4096ff] flex justify-center items-center"
+                      onClick={showModal}
+                    >
+                      Add Item <PlusOutlined />
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button
+                      type="primary"
+                      className="bg-[#4096ff] flex justify-center items-center"
+                      onClick={exportData}
+                    >
+                      Download <ArrowDownOutlined />
+                    </Button>
+                  </Col>
+                </Row>
               </Col>
             </Row>
             <Table
               columns={columns}
               className="w-full"
-              dataSource={[...TodoObj.todos]}
+              dataSource={dataSource}
             />
           </Row>
         </Content>
-        {console.log("inside html ", editData)}
       </Layout>
       {isModalOpen && (
         <AddItem
           isModalOpen={isModalOpen}
           handleOk={handleOk}
           handleCancel={handleCancel}
+          setDataSource={setDataSource}
         />
       )}
       {isEditModalOpen && (
