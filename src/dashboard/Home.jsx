@@ -15,7 +15,6 @@ import TodoObj from "../store/index";
 import { exportCSV } from "../operation/ExportCsv";
 import useDebounce from "../customHook/UseDebounce";
 
-const { Content } = Layout;
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -143,68 +142,53 @@ const Home = () => {
   return (
     <>
       {" "}
-      <Layout className="site-layout">
-        <Content
-          className="site-layout-background"
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            minHeight: 280,
-          }}
-        >
-          <Row className="gap-3">
-            <Row className="flex justify-between w-full gap-4">
+      <Row className="gap-3">
+        <Row className="flex justify-between w-full gap-4">
+          <Col>
+            <Row className="flex gap-4">
               <Col>
-                <Row className="flex gap-4">
-                  <Col>
-                    <Form.Item label="Search Item" name="searchItem">
-                      <Input placeholder="Search Item" onChange={onChange} />
-                    </Form.Item>
-                  </Col>
-                  <Col>
-                    <Form.Item>
-                      <Button
-                        className="bg-[#4096ff]"
-                        type="primary"
-                        onClick={handleSearch}
-                      >
-                        Search
-                      </Button>
-                    </Form.Item>
-                  </Col>
-                </Row>
+                <Form.Item label="Search Item" name="searchItem">
+                  <Input placeholder="Search Item" onChange={onChange} />
+                </Form.Item>
               </Col>
               <Col>
-                <Row className="flex gap-4">
-                  <Col>
-                    <Button
-                      type="primary"
-                      className="bg-[#4096ff] flex justify-center items-center"
-                      onClick={showModal}
-                    >
-                      Add Item <PlusOutlined />
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button
-                      type="primary"
-                      className="bg-[#4096ff] flex justify-center items-center"
-                      onClick={exportData}
-                    >
-                      Download <ArrowDownOutlined />
-                    </Button>
-                  </Col>
-                </Row>
+                <Form.Item>
+                  <Button
+                    className="bg-[#4096ff]"
+                    type="primary"
+                    onClick={handleSearch}
+                  >
+                    Search
+                  </Button>
+                </Form.Item>
               </Col>
             </Row>
-            <Table
-              columns={columns}
-              className="w-full"
-              dataSource={dataSource}
-            />
-          </Row>
-        </Content>
-      </Layout>
+          </Col>
+          <Col>
+            <Row className="flex gap-4">
+              <Col>
+                <Button
+                  type="primary"
+                  className="bg-[#4096ff] flex justify-center items-center"
+                  onClick={showModal}
+                >
+                  Add Item <PlusOutlined />
+                </Button>
+              </Col>
+              <Col>
+                <Button
+                  type="primary"
+                  className="bg-[#4096ff] flex justify-center items-center"
+                  onClick={exportData}
+                >
+                  Download <ArrowDownOutlined />
+                </Button>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <Table columns={columns} className="w-full" dataSource={dataSource} />
+      </Row>
       {isModalOpen && (
         <AddItem
           isModalOpen={isModalOpen}

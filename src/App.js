@@ -5,6 +5,7 @@ import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import Home from "./dashboard/Home";
 import PrivateRoute from "./router/privateRoute";
+import TikTok from "./tikTok/Index";
 const App = () => {
   return (
     <>
@@ -21,6 +22,7 @@ const App = () => {
             }
           >
             <Route path="/dashboard" element={<Home />} />
+            <Route path="/dashboard/tikTok" element={<TikTok />} />
           </Route>
         </Routes>
       </div>

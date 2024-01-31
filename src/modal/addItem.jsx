@@ -3,7 +3,7 @@ import { InputNumber, Modal, Form, Input, Button } from "antd";
 import { observer } from "mobx-react";
 import RegValidation from "../regx/regxIndex";
 
-const Additem = ({ isModalOpen, handleOk, handleCancel, setDataSource }) => {
+const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
   const [form] = Form.useForm();
 
   const onFinish = (values) => {
