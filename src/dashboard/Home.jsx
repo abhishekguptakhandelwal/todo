@@ -1,20 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { observer } from "mobx-react";
-
-import {
-  PlusOutlined,
-  ArrowDownOutlined,
-  DeleteOutlined,
-  EditOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Table } from "antd";
 import AddItem from "../modal/addItem";
-
 import TodoObj from "../store/index";
 import { exportCSV } from "../operation/ExportCsv";
 import useDebounce from "../customHook/UseDebounce";
-//import { columns } from "./TableColoum";
 import { handleCancel } from "./DashboardMobxStore";
 import { Coloum } from "./TableColoum";
 
@@ -24,9 +16,7 @@ const Home = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [editData, setEditData] = useState({});
   const header = ["First Name", "Last Name", "Email", "Age"];
-  let data = [...TodoObj.todos];
 
-  const [dataSource, setDataSource] = useState(data);
   const [search, setSearch] = useState("");
 
   const handleEdit = (data) => {
@@ -43,37 +33,32 @@ const Home = () => {
       TodoObj.createTodo(formValue);
     }
 
-    setDataSource([...TodoObj.todos]);
     setIsEdit(false);
     setIsModalOpen(false);
   };
 
+  const handleSearch = () => {
+    if (search.length === 0) {
+      TodoObj.Todo();
+    } else {
+      TodoObj.onChangeSearch(search);
+    }
+  };
+
   useDebounce(
     () => {
-      setDataSource(
-        data.filter((todo) =>
-          todo.firstName.toLowerCase().includes(search.toLowerCase())
-        )
-      );
+      TodoObj.onChangeSearch(search);
     },
     [search.length > 2],
     500
   );
 
-  const handleSearch = () => {
-    if (search.length === 0) {
-      setDataSource([...TodoObj.todos]);
-    }
-    const filterBySearch = data.filter((todo) =>
-      todo.firstName.toLowerCase().includes(search.toLowerCase())
-    );
-    setDataSource(filterBySearch);
-  };
-  let onChange = (e) => {
-    setSearch(e.target.value);
-    if (search.length === 0) {
-      setSearch("");
-      setDataSource([...TodoObj.todos]);
+  let onChangeSearch = (e) => {
+    setSearch(e);
+    if (search.length <= 2) {
+      TodoObj.onChangeSearch(search);
+    } else if (search.length == 0) {
+      TodoObj.Todo();
     }
   };
 
@@ -86,7 +71,10 @@ const Home = () => {
             <Row className="flex gap-4">
               <Col>
                 <Form.Item label="Search Item" name="searchItem">
-                  <Input placeholder="Search Item" onChange={onChange} />
+                  <Input
+                    placeholder="Search Item"
+                    onChange={(e) => onChangeSearch(e.target.value)}
+                  />
                 </Form.Item>
               </Col>
               <Col>
@@ -140,7 +128,6 @@ const Home = () => {
           isModalOpen={isModalOpen}
           handleOk={handleOk}
           handleCancel={() => handleCancel(setIsModalOpen, setIsEdit)}
-          setDataSource={setDataSource}
           isEdit={isEdit}
           editData={editData}
         />
