@@ -15,7 +15,7 @@ const Home = () => {
 
   const [isEdit, setIsEdit] = useState(false);
   const [editData, setEditData] = useState({});
-  const header = ["First Name", "Last Name", "Email", "Age"];
+  const header = ["First Name", "Last Name", "Email", "Age", "id"];
 
   const [search, setSearch] = useState("");
 
