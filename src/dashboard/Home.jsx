@@ -187,7 +187,14 @@ const Home = () => {
             </Row>
           </Col>
         </Row>
-        <Table columns={columns} className="w-full" dataSource={dataSource} />
+        <Table
+          columns={columns}
+          className="w-full"
+          dataSource={dataSource}
+          pagination={{
+            pageSize: 50,
+          }}
+        />
       </Row>
       {isModalOpen && (
         <AddItem
