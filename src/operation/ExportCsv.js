@@ -1,7 +1,6 @@
 import TodoObj from "../store";
 
 export const exportCSV = async (userData, header) => {
-  console.log(userData, header);
   const userArray = TodoObj.Todo.map((user) => Object.values(user));
   userArray.unshift(header);
   console.log(userArray);

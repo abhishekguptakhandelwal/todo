@@ -1,13 +1,25 @@
 import React from "react";
-import { InputNumber, Modal, Form, Input, Button } from "antd";
+import { Modal, Form, Input, Button } from "antd";
 import { observer } from "mobx-react";
 import RegValidation from "../regx/regxIndex";
 
-const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
+const Additem = ({ isModalOpen, handleOk, handleCancel, isEdit, editData }) => {
   const [form] = Form.useForm();
 
+  let initialValues = isEdit
+    ? {
+        ["firstName"]: editData.firstName,
+        ["lastName"]: editData.lastName,
+        ["age"]: editData.age,
+        ["email"]: editData.email,
+      }
+    : form.resetFields();
+
   const onFinish = (values) => {
-    handleOk({ ...values, id: Math.random() * 100 });
+    let data = isEdit
+      ? { id: editData.id, ...values }
+      : { ...values, id: Math.random() * 100 };
+    handleOk(data);
     form.resetFields();
   };
   const onFinishFailed = (errorInfo) => {
@@ -16,7 +28,7 @@ const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
   return (
     <>
       <Modal
-        title="Item"
+        title={isEdit ? "Edit Item" : "Add Item"}
         okButtonProps={{ style: { backgroundColor: "#4096ff" } }}
         open={isModalOpen}
         onOk={form.submit}
@@ -35,9 +47,7 @@ const Additem = ({ isModalOpen, handleOk, handleCancel }) => {
           style={{
             maxWidth: 600,
           }}
-          initialValues={{
-            remember: true,
-          }}
+          initialValues={initialValues}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
