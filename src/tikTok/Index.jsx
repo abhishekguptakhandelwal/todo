@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Square from "./Square";
+import ConfettiExplosion from "react-confetti-explosion";
 
 const Index = () => {
   const [isXtrue, setIsXTrue] = useState(true);
@@ -22,11 +23,11 @@ const Index = () => {
         return true;
       }
     }
-
     return false;
   };
 
   const isWinner = checkWinner();
+
   const handleUserClick = (e) => {
     const copyState = { ...state };
     copyState[e] = isXtrue ? "X" : "O";
@@ -41,13 +42,15 @@ const Index = () => {
           <h2 className="font-bold text-2xl py-2">
             Now {isXtrue ? "X" : "O"} turn{" "}
           </h2>
-          {console.log(isWinner)}
-          {isWinner === true && (
+          {isWinner && (
             <p className="font-bold text-2xl py-2">
               Congratulation {!isXtrue ? "X" : "O"} Win
             </p>
           )}
           <>
+            {isWinner && (
+              <ConfettiExplosion duration={10000} height={"100vh"} />
+            )}
             <div className="flex gap">
               <Square onClick={() => handleUserClick(0)} value={state[0]} />
               <Square onClick={() => handleUserClick(1)} value={state[1]} />
